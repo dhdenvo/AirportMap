@@ -4,6 +4,7 @@ import {
   Geographies,
   Geography,
   Marker,
+  ZoomableGroup,
 } from "react-simple-maps";
 
 const geoUrl =
@@ -11,40 +12,51 @@ const geoUrl =
 
 const App = () => {
   return (
-    <div style={{ width: "80vw", height: "80vh" }}>
-      <ComposableMap>
-        <Geographies geography={geoUrl}>
-          {({ geographies }) =>
-            geographies.map((geo) => (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill="#EAEAEC"
-                stroke="#D6D6DA"
-                strokeWidth={0.5}
-                style={{
-                  default: { outline: "none" },
-                  hover: { outline: "none" },
-                  pressed: { outline: "none" },
-                }}
-              />
-            ))
-          }
-        </Geographies>
-        <Marker coordinates={[-79.347015, 43.65107]}>
-          <circle r={2} fill="#5D5A6D" />
-          <text
-            textAnchor="middle"
-            y={-3}
-            style={{
-              fontFamily: "system-ui",
-              fill: "#5D5A6D",
-              fontSize: "50%",
-            }}
-          >
-            Toronto
-          </text>
-        </Marker>
+    <div
+      style={{
+        width: "80vw",
+        height: "80vh",
+        border: "2px solid black",
+      }}
+    >
+      <ComposableMap
+        style={{ width: "100%", height: "100%" }}
+        projectionConfig={{ center: [-95, 60], scale: 700 }}
+      >
+        <ZoomableGroup>
+          <Geographies geography={geoUrl}>
+            {({ geographies }) =>
+              geographies.map((geo) => (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill="#EAEAEC"
+                  stroke="#D6D6DA"
+                  strokeWidth={0.5}
+                  style={{
+                    default: { outline: "none" },
+                    hover: { outline: "none" },
+                    pressed: { outline: "none" },
+                  }}
+                />
+              ))
+            }
+          </Geographies>
+          <Marker coordinates={[-79.347015, 43.65107]}>
+            <circle r={2} fill="#5D5A6D" />
+            <text
+              textAnchor="middle"
+              y={-3}
+              style={{
+                fontFamily: "system-ui",
+                fill: "#5D5A6D",
+                fontSize: "50%",
+              }}
+            >
+              Toronto
+            </text>
+          </Marker>
+        </ZoomableGroup>
       </ComposableMap>
     </div>
   );
