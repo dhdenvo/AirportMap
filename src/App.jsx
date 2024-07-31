@@ -8,9 +8,8 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import FileUpload from "./FileUpload";
-
-const geoUrl =
-  "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson";
+import geographies from "./assets/canada.json";
+import airports from "./assets/airports.json";
 
 const extractAirportCodes = (input) => {
   const regex = /\b(?:C([A-Z]{3})|([A-Z]{3}))\b/g;
@@ -25,19 +24,9 @@ const extractAirportCodes = (input) => {
 };
 
 const App = () => {
-  const [airports, setAirports] = useState(null);
   const [data, setData] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [lines, setLines] = useState([]);
-  useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/jbrooksuk/JSON-Airports/master/airports.json"
-    )
-      .then(async (response) => setAirports(await response.json()))
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   useEffect(() => {
     const existingMarkers = {};
@@ -86,7 +75,7 @@ const App = () => {
         projectionConfig={{ center: [-94, 58], scale: 1100 }}
       >
         <ZoomableGroup>
-          <Geographies geography={geoUrl}>
+          <Geographies geography={geographies}>
             {({ geographies }) =>
               geographies.map((geo) => (
                 <Geography
