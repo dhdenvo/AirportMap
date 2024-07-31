@@ -21,7 +21,7 @@ const App = () => {
     >
       <ComposableMap
         style={{ width: "100%", height: "100%" }}
-        projectionConfig={{ center: [-95, 60], scale: 700 }}
+        projectionConfig={{ center: [-94, 58], scale: 1100 }}
       >
         <ZoomableGroup>
           <Geographies geography={geoUrl}>
