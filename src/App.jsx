@@ -71,7 +71,7 @@ const App = () => {
           </Marker>
         </ZoomableGroup>
       </ComposableMap>
-      <FileUpload setData />
+      <FileUpload setData={setData} />
     </div>
   );
 };

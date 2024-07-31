@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import csv from "csvtojson";
 
 const FileUpload = ({ setData }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -15,14 +16,21 @@ const FileUpload = ({ setData }) => {
     setUploading(true);
     setUploadSuccess(false);
 
-    // Run once done
-    setUploadSuccess(true);
-    setUploading(false);
+    const reader = new FileReader();
+    reader.onload = () =>
+      csv()
+        .fromString(reader.result)
+        .then((csvRow) => {
+          setData(csvRow);
+          setUploadSuccess(true);
+          setUploading(false);
+        });
+    reader.readAsText(selectedFile);
   };
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} /> //accept="text/csv"
+      <input type="file" onChange={handleFileChange} accept="text/csv" />
       <button onClick={handleFileUpload} disabled={uploading}>
         {uploading ? "Uploading..." : "Upload"}
       </button>
