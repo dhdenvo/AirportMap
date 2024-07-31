@@ -4,6 +4,7 @@ import {
   Geographies,
   Geography,
   Marker,
+  Line,
   ZoomableGroup,
 } from "react-simple-maps";
 import FileUpload from "./FileUpload";
@@ -11,18 +12,66 @@ import FileUpload from "./FileUpload";
 const geoUrl =
   "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson";
 
+const extractAirportCodes = (input) => {
+  const regex = /\b(?:C([A-Z]{3})|([A-Z]{3}))\b/g;
+  const codes = [];
+  let match;
+
+  while ((match = regex.exec(input)) !== null)
+    if (match[1]) codes.push(match[1]);
+    else codes.push(match[2]);
+
+  return codes;
+};
+
 const App = () => {
   const [airports, setAirports] = useState(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [markers, setMarkers] = useState([]);
+  const [lines, setLines] = useState([]);
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/jbrooksuk/JSON-Airports/master/airports.json"
     )
-      .then((response) => setAirports(response.json()))
+      .then(async (response) => setAirports(await response.json()))
       .catch((error) => {
         console.error(error);
       });
   }, []);
+
+  useEffect(() => {
+    const existingMarkers = {};
+    const newLines = [];
+    data
+      //.filter((row) => row["CO-PILOT, STUDENT OR PASSENGER"].includes("L"))
+      .forEach(({ FROM, TO, REMARKS }) => {
+        const path = [FROM, REMARKS, TO]
+          .map(extractAirportCodes)
+          .flat()
+          .map((code) => {
+            const airport = airports.find(({ iata }) => iata === code);
+            if (!airport) return;
+            const name = code;
+            const coords = [airport.lon, airport.lat];
+            existingMarkers[name] = coords;
+            return { name, coords };
+          })
+          .filter((x) => x);
+
+        let i = 0;
+        while (i < path.length - 1) {
+          newLines.push({ from: path[i], to: path[i + 1] });
+          i++;
+        }
+      });
+    setMarkers(
+      Object.entries(existingMarkers).map(([name, coords]) => ({
+        name,
+        coords,
+      }))
+    );
+    setLines(newLines);
+  }, [data]);
 
   return (
     <div
@@ -55,20 +104,33 @@ const App = () => {
               ))
             }
           </Geographies>
-          <Marker coordinates={[-79.347015, 43.65107]}>
-            <circle r={2} fill="#5D5A6D" />
-            <text
-              textAnchor="middle"
-              y={-3}
-              style={{
-                fontFamily: "system-ui",
-                fill: "#5D5A6D",
-                fontSize: "50%",
-              }}
-            >
-              Toronto
-            </text>
-          </Marker>
+          {lines.map(({ to, from }) => (
+            <Line
+              to={to.coords}
+              from={from.coords}
+              strokeLinecap="round"
+              strokeWidth={1}
+              key={`${to.name}-${from.name}-${Math.floor(
+                Math.random() * 10000
+              )}`}
+            />
+          ))}
+          {markers.map(({ name, coords }) => (
+            <Marker coordinates={coords} key={name}>
+              <circle r={1} fill="#5D5A6D" />
+              <text
+                textAnchor="middle"
+                y={-3}
+                style={{
+                  fontFamily: "system-ui",
+                  fill: "#5D5A6D",
+                  fontSize: "50%",
+                }}
+              >
+                {name}
+              </text>
+            </Marker>
+          ))}
         </ZoomableGroup>
       </ComposableMap>
       <FileUpload setData={setData} />
