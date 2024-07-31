@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -11,6 +11,17 @@ const geoUrl =
   "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson";
 
 const App = () => {
+  const [airports, setAirports] = useState(null);
+  useEffect(() => {
+    fetch(
+      "https://raw.githubusercontent.com/jbrooksuk/JSON-Airports/master/airports.json"
+    )
+      .then((response) => setAirports(response.json()))
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div
       style={{
