@@ -6,12 +6,14 @@ import {
   Marker,
   ZoomableGroup,
 } from "react-simple-maps";
+import FileUpload from "./FileUpload";
 
 const geoUrl =
   "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson";
 
 const App = () => {
   const [airports, setAirports] = useState(null);
+  const [data, setData] = useState(null);
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/jbrooksuk/JSON-Airports/master/airports.json"
@@ -69,6 +71,7 @@ const App = () => {
           </Marker>
         </ZoomableGroup>
       </ComposableMap>
+      <FileUpload setData />
     </div>
   );
 };
