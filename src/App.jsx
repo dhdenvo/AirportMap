@@ -12,7 +12,7 @@ import geographies from "./assets/canada.json";
 import airports from "./assets/airports.json";
 
 const extractAirportCodes = (input) => {
-  const regex = /\b(?:C([A-Z]{3})|([A-Z]{3}))\b/g;
+  const regex = /\b(?:C([A-Z]{2}[A-Z0-9])|([A-Z]{2}[A-Z0-9]))\b/g;
   const codes = [];
   let match;
 

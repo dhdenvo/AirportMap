@@ -73211,5 +73211,16 @@
     "type": "airport",
     "lat": "42.885662",
     "size": "medium"
+  },
+  {
+    "iata": "KB6",
+    "lon": "-89.572267",
+    "iso": "CA",
+    "status": 1,
+    "name": "Angling Lake/Wapekeka Airport",
+    "continent": "NA",
+    "type": "airport",
+    "lat": "53.845342",
+    "size": "tiny"
   }
 ]
