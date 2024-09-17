@@ -24,7 +24,7 @@ const extractAirportCodes = (input) => {
 };
 
 const App = () => {
-  const [name, setName] = useState("");
+  const [filter, setFilter] = useState("");
   const [data, setData] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [lines, setLines] = useState([]);
@@ -34,9 +34,9 @@ const App = () => {
     const newLines = [];
     data
       .filter((row) =>
-        row["CO-PILOT, STUDENT OR PASSENGER"]
-          .toLowerCase()
-          .includes(name.toLowerCase())
+        Object.values(row).some((v) =>
+          v.toLowerCase().includes(filter.toLowerCase())
+        )
       )
       .forEach(({ FROM, TO, REMARKS }) => {
         const path = [FROM, REMARKS, TO]
@@ -65,7 +65,7 @@ const App = () => {
       }))
     );
     setLines(newLines);
-  }, [data, name]);
+  }, [data, filter]);
 
   return (
     <div
@@ -105,7 +105,7 @@ const App = () => {
               strokeLinecap="round"
               strokeWidth={1}
               key={`${to.name}-${from.name}-${Math.floor(
-                Math.random() * 10000
+                Math.random() * 1000000
               )}`}
             />
           ))}
@@ -128,12 +128,12 @@ const App = () => {
         </ZoomableGroup>
       </ComposableMap>
       <div style={{ paddingBottom: "1vh", paddingTop: "1vh" }}>
-        {"Name: "}
+        {"Filter: "}
         <input
           type="text"
           id="name"
           name="name"
-          onChange={({ target }) => setName(target.value)}
+          onChange={({ target }) => setFilter(target.value)}
         />
       </div>
       <FileUpload setData={setData} />
