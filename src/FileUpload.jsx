@@ -17,14 +17,24 @@ const FileUpload = ({ setData }) => {
     setUploadSuccess(false);
 
     const reader = new FileReader();
-    reader.onload = () =>
+    reader.onload = () => {
+      let rows = reader.result.split("\n");
+      rows.shift();
+      const headerRows = rows.slice(0, 3);
+      const headers = Array.from(Array(headerRows[0].length).keys()).map((i) =>
+        headerRows.reduce((x, y) => y.split(",")[i] || x, `${i}`)
+      );
+      rows = rows.slice(2);
+      rows[0] = headers;
+      const file = rows.join("\n");
       csv()
-        .fromString(reader.result)
+        .fromString(file)
         .then((csvRow) => {
           setData(csvRow);
           setUploadSuccess(true);
           setUploading(false);
         });
+    };
     reader.readAsText(selectedFile);
   };
 

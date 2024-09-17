@@ -3759,7 +3759,7 @@
   },
   {
     "iata": "YAV",
-    "lon": "-123.3",
+    "lon": "-97.0373",
     "iso": "CA",
     "status": 1,
     "name": "Winnipeg / St. Andrews Airport",
@@ -51942,17 +51942,6 @@
     "name": null,
     "continent": "SA",
     "type": "airport",
-    "size": "small"
-  },
-  {
-    "iata": "CPL",
-    "lon": "-75.46667",
-    "iso": "CO",
-    "status": 1,
-    "name": "Chaparral Airport",
-    "continent": "SA",
-    "type": "airport",
-    "lat": "3.716667",
     "size": "small"
   },
   {
